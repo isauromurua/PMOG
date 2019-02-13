@@ -5,12 +5,13 @@ function gl_v2(x, y, z, lambda, w0, phi0, m, n, conj)
     q0 = q_0(lambda, w0)
     R = rad_curvature(z, q0)
     curved_wf = curved_wavefront(x, y, R)
+    guoys_phase = gouys_p(z, q0)
 
 end
 
 % PARAXIAL WAVE FACTORS:
 
-% =================  1. Laguerre modulator   =====================
+% =================  1. Laguerre-Gauss modulator   =====================
 
 function y = laguerg(a, n, x)
     %
@@ -26,9 +27,6 @@ function y = laguerg(a, n, x)
 end
 
 % =================  2. Gaussian profile   =====================
-function prof = gaussian()
-prof = w0.*exp(-(x.^2+y.^2)./waist(z.^2))./waist(z);
-end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
@@ -51,9 +49,11 @@ function curved_wf = curved_wavefront(x, y, R)
     % Returns the curved wafvefront resulting from spherical
     % wave distortion
     curvature = k ./ (2 .* R)
-    curved_wf = e.^(j .* curvature .* (x.^2 + y.^2))
+    curved_wf = exp(j .* curvature .* (x.^2 + y.^2))
 end
 
 % =================  4. Guoy's phase   =====================
 
-function gouys_phase = gouys_p(z, lambda)
+function gouys_phase = gouys_p(z, q0)
+    gouys_phase = exp(-j .* atan(z ./ q0))
+end
