@@ -22,11 +22,19 @@ function y = laguerg(a, n, x)
     else
         impares = repmat([1, -1], 2 * (n - 1) / 2, 1);
     end
-
+    
+    
     y = sum(suma);
 end
 
+function nk = nCk(n,k)
+% Vectorized version of NCHOOSEK().
+    nk = factorial(n)./(factorial(k).*factorial(n-k));
+end
 % =================  2. Gaussian profile   =====================
+function prof = gaussian()
+    prof = w0.*exp(-(x.^2+y.^2)./waist(z.^2))./waist(z);
+end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
