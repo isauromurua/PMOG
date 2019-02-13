@@ -1,13 +1,13 @@
-function gl_v2(x, y, z, lambda, w0, phi0, m, n, conj)
+function beam = gl_v2(x, y, z, lambda, w0, phi0, m, n, conj)
     %
     %
     %
-
+    beam = laguerg().*gaussian
 end
 
 % PARAXIAL WAVE FACTORS:
 
-% =================  1. Laguerre-Gauss modulator   =====================
+% =================  1. Laguerre modulator   =====================
 
 function y = laguerg(a, n, x)
     %
@@ -23,6 +23,9 @@ function y = laguerg(a, n, x)
 end
 
 % =================  2. Gaussian profile   =====================
+function prof = gaussian()
+    prof = w0.*exp(-(x.^2+y.^2)./waist(z.^2))./waist(z);
+end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
@@ -46,5 +49,5 @@ end
         Cur = k / (2 * R(z))
         cwf = e.^(j .* term1 .* r_perp.^2)
     end
-
-    % =================  4. Guoy's phase   =====================
+    
+% ===================  4. Guoy's phase   =====================
