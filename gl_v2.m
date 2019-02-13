@@ -10,7 +10,7 @@ end
 
 % PARAXIAL WAVE FACTORS:
 
-% =================  1. Laguerre-Gauss modulator   =====================
+% =================  1. Laguerre modulator   =====================
 
 function y = laguerg(a, n, x)
     %
@@ -26,6 +26,9 @@ function y = laguerg(a, n, x)
 end
 
 % =================  2. Gaussian profile   =====================
+function prof = gaussian()
+prof = w0.*exp(-(x.^2+y.^2)./waist(z.^2))./waist(z);
+end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
