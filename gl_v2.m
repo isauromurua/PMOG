@@ -14,7 +14,7 @@ end
 
 % PARAXIAL WAVE FACTORS:
 
-% =================  1. Laguerre-Gauss modulator   =====================
+% =================  1. Laguerre modulator   =====================
 
 function f = laguerre_modulator() % missing parameters
     glp = laguerg(a, n, x)
@@ -22,7 +22,6 @@ function f = laguerre_modulator() % missing parameters
 end
 
 function glp = laguerg(a, n, x)
-    %
     % Returns the Generalized Laguerre Polynomials given constants 
     % a and n: L_n^a(x) = sum_{i=0}^n((-1)^i nCr(n+a, n-i) x^i/i!)
     %
@@ -30,15 +29,14 @@ function glp = laguerg(a, n, x)
         impares = repmat([1 - 1], n / 2, 1);
     else
         impares = repmat([1; -1], (n - 1) / 2, 1);
-        impares = [impares; 1]
+        impares = [impares; 1];
     end
 
-    index = [1:n]'
-    n = ones(n, 1)
+    index = (1:n)';
+    n = ones(n, 1);
+    combinations = nCk(n + a, n - index);
 
-    combinations = nCk(n + a, n - index)
-
-    glp = sum(impares .* combinations .* x .^ i ./ factorial(i));
+    glp = sum(impares .* combinations .* x .^ index ./ factorial(index));
 end
 
 function nk = nCk(n, k)
