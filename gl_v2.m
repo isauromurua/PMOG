@@ -2,14 +2,14 @@ function gl = gl_v2(x, y, z, lambda, w0, phi0, m, n, conj)
     %
     %
     %
-    q0 = q_0(lambda, w0)
-    R = rad_curvature(z, q0)
+    q0 = q_0(lambda, w0);
+    R = rad_curvature(z, q0);
 
-    modulator = laguerre_modulator() % in development
-    curved_wf = curved_wavefront(x, y, R, lambda)
-    guoys_phase = guoys_p(z, q0)
+    modulator = laguerre_modulator(); % in development
+    curved_wf = curved_wavefront(x, y, R, lambda);
+    guoys_phase = guoys_p(z, q0);
 
-    gl = modulator .* curved_wf .* guoys_phase 
+    gl = modulator .* curved_wf .* guoys_phase;
 end
 
 % PARAXIAL WAVE FACTORS:
