@@ -1,24 +1,28 @@
-function gl = gl_v2(x, y, z, lambd, w, n, m, conj)
+function gl = gl_v2(x, y, z, n, m, varargin)
     %
     %
     %
+    
     global lambda w0
-    lambda = lambd; w0 = w;
-    q0 = q_0(lambda, w0);
-    R = rad_curvature(z, q0);
+    names = {"lambda","w0","conj"}; % Optional argument names
+    defaults = {500,1,0}; % Optional arguments default values
+    [lambda,w0,conj] = parsepvpairs(names,defaults,varargin{:});
+    q0 = pi .* w0.^2 ./ lambda;
+    R = rad_curvature(z);
 
-    modulator = laguerre_modulator(n,m,x,y); % in development
-    curved_wf = curved_wavefront(x, y, R, lambda);
-    guoys_phase = guoys_p(z, q0);
+    modulator = laguerre_modulator(n,m,x,y,z); % in development
+    curved_wf = curved_wavefront(x, y, R);
+    guoys_phase = guoys_p(z);
+    gauss = gaussian(x,y,z);
 
-    gl = modulator .* curved_wf .* guoys_phase;
+    gl = modulator .* gauss .* curved_wf .* guoys_phase;
 end
 
 % PARAXIAL WAVE FACTORS:
 
 % =================  1. Laguerre modulator   =====================
 
-function f = laguerre_modulator(a,n,x,y)
+function f = laguerre_modulator(a,n,x,y,z)
     % Returns the Laguerre function as modulating wave
     r2 = x.^2 + y.^2;
     f = laguerg(a, n, 2*r2/waist(z)).*exp(1j);
@@ -50,7 +54,7 @@ end
 
 % =================  2. Gaussian profile   =====================
 
-function prof = gaussian()
+function prof = gaussian(x,y,z)
     global w0
     prof = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z);
 end
@@ -63,13 +67,6 @@ end
 
 % =================  3. Curved wavefront   =====================
 
-function R = rad_curvature(z)
-    % returns the radius of curvature of the wavefront
-    global lambda w0
-    q0 = pi .* w0.^2 ./ lambda;
-    R = z .* (1 + (q0 ./ z).^2);
-end
-
 function curved_wf = curved_wavefront(x, y, R)
     % Returns the curved wafvefront resulting from spherical
     % wave distortion
@@ -78,6 +75,12 @@ function curved_wf = curved_wavefront(x, y, R)
     curved_wf = exp(1j .* curvature .* (x.^2 + y.^2));
 end
 
+function R = rad_curvature(z)
+    % Returns the radius of curvature of the wavefront
+    global lambda w0
+    q0 = pi .* w0.^2 ./ lambda;
+    R = z .* (1 + (q0 ./ z).^2);
+end
 % =================  4. Guoy's phase   =====================
 
 function guoys_phase = guoys_p(z)
