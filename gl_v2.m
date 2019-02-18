@@ -1,4 +1,4 @@
-function gl = gl_v2(x, y, z, lambd, w, phi0, m, n, conj)
+function gl = gl_v2(x, y, z, lambd, w, n, m, conj)
     %
     %
     %
@@ -7,7 +7,7 @@ function gl = gl_v2(x, y, z, lambd, w, phi0, m, n, conj)
     q0 = q_0(lambda, w0);
     R = rad_curvature(z, q0);
 
-    modulator = laguerre_modulator(); % in development
+    modulator = laguerre_modulator(n,m,x,y); % in development
     curved_wf = curved_wavefront(x, y, R, lambda);
     guoys_phase = guoys_p(z, q0);
 
@@ -18,10 +18,10 @@ end
 
 % =================  1. Laguerre modulator   =====================
 
-function f = laguerre_modulator(a,n,x,y) % missing parameters
-    r = sqrt(x.^2 + y.^2);
-    glp = laguerg(a, n, sqrt(2).*r/waist(z));
-
+function f = laguerre_modulator(a,n,x,y)
+    % Returns the Laguerre function as modulating wave
+    r2 = x.^2 + y.^2;
+    f = laguerg(a, n, 2*r2/waist(z)).*exp(1j);
 end
 
 function glp = laguerg(a, n, x)
@@ -51,25 +51,22 @@ end
 % =================  2. Gaussian profile   =====================
 
 function prof = gaussian()
+    global w0
     prof = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z);
 end
 
-function w = waist(z, w0)
+function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
-    global lambda
+    global lambda w0
     w = (1 / pi) * sqrt(lambda.^2 * z.^2 + pi^2 .* w0^2);
 end
 
 % =================  3. Curved wavefront   =====================
 
-function q0 = rayleigh_range(w0)
-    % Returns the Rayleigh range given wavelength and frequency
-    global lambda
-    q0 = pi .* w0.^2 ./ lambda;
-end
-
-function R = rad_curvature(z, q0)
+function R = rad_curvature(z)
     % returns the radius of curvature of the wavefront
+    global lambda w0
+    q0 = pi .* w0.^2 ./ lambda;
     R = z .* (1 + (q0 ./ z).^2);
 end
 
@@ -83,6 +80,8 @@ end
 
 % =================  4. Guoy's phase   =====================
 
-function guoys_phase = guoys_p(z, q0)
-    guoys_phase = exp(-j .* atan(z ./ q0));
+function guoys_phase = guoys_p(z)
+    global lambda w0
+    q0 = pi .* w0.^2 ./ lambda;
+    guoys_phase = exp(-1j .* atan(z ./ q0));
 end
