@@ -1,7 +1,9 @@
-function gl = gl_v2(x, y, z, lambda, w0, phi0, m, n, conj)
+function gl = gl_v2(x, y, z, lambd, w, phi0, m, n, conj)
     %
     %
     %
+    global lambda w0
+    lambda = lambd; w0 = w;
     q0 = q_0(lambda, w0);
     R = rad_curvature(z, q0);
 
@@ -18,7 +20,7 @@ end
 
 function f = laguerre_modulator(a,n,x,y) % missing parameters
     r = sqrt(x.^2 + y.^2);
-    glp = laguerg(a, n, r);
+    glp = laguerg(a, n, sqrt(2).*r/waist(z));
 
 end
 
@@ -52,15 +54,17 @@ function prof = gaussian()
     prof = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z);
 end
 
-function w = waist(z, w0, lambda)
+function w = waist(z, w0)
     % Returns the waist of the beam at distance z of propagation.
+    global lambda
     w = (1 / pi) * sqrt(lambda.^2 * z.^2 + pi^2 .* w0^2);
 end
 
 % =================  3. Curved wavefront   =====================
 
-function q0 = rayleigh_range(lambda, w0)
+function q0 = rayleigh_range(w0)
     % Returns the Rayleigh range given wavelength and frequency
+    global lambda
     q0 = pi .* w0.^2 ./ lambda;
 end
 
@@ -69,11 +73,12 @@ function R = rad_curvature(z, q0)
     R = z .* (1 + (q0 ./ z).^2);
 end
 
-function curved_wf = curved_wavefront(x, y, R, lambda)
+function curved_wf = curved_wavefront(x, y, R)
     % Returns the curved wafvefront resulting from spherical
     % wave distortion
+    global lambda
     curvature = 2 .* pi ./ (2 .* R .* lambda);
-    curved_wf = exp(j .* curvature .* (x.^2 + y.^2));
+    curved_wf = exp(1j .* curvature .* (x.^2 + y.^2));
 end
 
 % =================  4. Guoy's phase   =====================
