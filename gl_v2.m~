@@ -12,8 +12,6 @@ function gl = gl_v2(x, y, z, n, m, varargin)
     % Make conjugate if necessary
     if conj
         j = -1j;
-    else
-        j = 1j;
     end
     
     % Call the function defined for each term
@@ -94,7 +92,7 @@ end
 % =================  4. Guoy's phase   =====================
 
 function guoys_phase = guoys_p(z)
-    global lambda w0 j
+    global lambda w0
     q0 = pi .* w0.^2 ./ lambda;
     guoys_phase = exp(-j .* atan(z ./ q0));
 end
