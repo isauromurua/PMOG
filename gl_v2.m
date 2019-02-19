@@ -6,7 +6,7 @@ function gl = gl_v2(x, y, z, n, m, varargin)
     % Parse inputs
     global lambda w0 j
     names = {"lambda","w0","conj"}; % Optional argument names
-    defaults = {500e-9,1,0}; % Optional arguments default values
+    defaults = {500e-9,1e2,0}; % Optional arguments default values
     [lambda,w0,conj] = parsepvpairs(names,defaults,varargin{:});
     
     % Make conjugate if necessary
@@ -34,7 +34,7 @@ function f = laguerre_modulator(a,n,x,y,z)
     % Returns the Laguerre function as modulating wave
     global j
     r2 = x.^2 + y.^2;
-    f = laguerg(a, n, 2*r2/waist(z)).*exp(j);
+    f = laguerg(a, n, 2*r2./waist(z)).*exp(j);
 end
 
 function glp = laguerg(a, n, x)
@@ -42,18 +42,10 @@ function glp = laguerg(a, n, x)
     %   given constants a and n: 
     %   L_n^a(x) = sum_{i=0}^n((-1)^i nCr(n+a, n-i) x^i/i!)
 
-    if mod(n, 2) == 0
-        impares = repmat([1; -1], n / 2, 1);
-    else
-        impares = repmat([1; -1], (n - 1) / 2, 1);
-        impares = [impares; 1];
-    end
+    index = (0:n)'; % This is the summation index
+    combinations = nCk(n + a, n - index); % The binomial coefficient for each term
 
-    index = (1:n)';
-    n = ones(n, 1);
-    combinations = nCk(n + a, n - index);
-
-    glp = sum(impares .* combinations .* x .^ index ./ factorial(index));
+    glp = sum((-1) .^ index .* combinations .* x .^ index ./ factorial(index));
 end
 
 function nk = nCk(n, k)
@@ -97,4 +89,17 @@ function guoys_phase = guoys_p(z)
     global lambda w0 j
     q0 = pi .* w0.^2 ./ lambda;
     guoys_phase = exp(-j .* atan(z ./ q0));
+end
+
+
+%% PRUEBA
+function beam = prueba
+
+x = linspace(-2,2,100);
+y = x;
+
+[X, Y] = meshgrid(x,y);
+Z = ones(size(X));
+
+beam = gl_v2(X,Y,Z,2,2);
 end
