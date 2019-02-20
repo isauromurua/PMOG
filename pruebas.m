@@ -1,11 +1,11 @@
 % =============== SCRIPT PARA PRUEBAS Y VISUALIZACIONES ==================
 
 %% Magnitud del campo electrico
-x = linspace(-2,2,300);
+x = linspace(-2,2,400);
 y = x;
 
 [X, Y] = meshgrid(x,y);
-Z = ones(size(X));
+Z = 0.01.*ones(size(X));
 
 beamer = beam(X,Y,Z,1,2);
 modulo = beamer.*conj(beamer);
@@ -15,7 +15,7 @@ surf(X,Y,el_bueno,'EdgeColor','None');
 view(2); colormap(gray); rotate3d on; colorbar;
 
 %% Fase del fasor
-x = linspace(-2,2,300);
+x = linspace(-2,2,400);
 y = x;
 
 [X, Y] = meshgrid(x,y);

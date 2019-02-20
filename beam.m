@@ -37,7 +37,7 @@ end
 
 % PARAXIAL WAVE FACTORS:
 
-% =================  1. Laguerre modulator   =====================
+% =================  1.1 Laguerre modulator   =====================
 
 function f = laguerre_modulator(a,n,x,y,z)
     % Returns the Laguerre function as modulating wave
@@ -71,6 +71,28 @@ function nk = nCk(n, k)
     nk = factorial(n) ./ (factorial(k) .* factorial(n - k));
 end
 
+% =================  1.2 Hermite modulator   =====================
+
+function hmn = hermite_modulator(a, n, x, y, z)
+    % Returns the Hermite-Gauss function as modulating wave
+    
+    arg = sqrt(2) .* x ./ waist(z); % por completar
+    hmn = hermite(a, arg) .* hermite(n, arg);
+end
+
+function h = hermite(n, x)
+    % Returns the nth Hermite polynomial of x
+
+    [size1, size2] = size(x);
+    m = floor(n / 2);
+    l = repmat([0:m], 1, 1, 1);
+    l = permute(l, [1 3 2]);
+    l = repmat(l, size1, size2, 1);
+    x = repmat(x, 1, 1, m+1);
+    h = factorial(n) .* sum(((-1).^l .* (2 .* x).^(n - 2 .* l)) ./ ...
+        (factorial(l) .* factorial(n - 2 .* l)), 3);
+end
+
 % =================  2. Gaussian profile   =====================
 
 function prof = gaussian(x,y,z)
@@ -91,7 +113,7 @@ function curved_wf = curved_wavefront(x, y, z)
     % wave distortion
     global lambda
     R = rad_curvature(z);
-    curvature = 2 .* pi ./ (2 .* R .* lambda);
+    curvature = 2 .* pi ./ (2 .* R .* lambda)
     curved_wf = exp(1j .* curvature .* (x.^2 + y.^2));
 end
 
