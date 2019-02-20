@@ -1,7 +1,11 @@
 function be = beam(x, y, z, n, m, varargin)
-    %
-    %
-    %
+    % Paraxial approximation modulated beams.
+    %   Accepts the following name-value pairs:
+    %       'modul' – 'lag' is Laguerre modulator
+    %               – 'herm' is Hermite modulator
+    %       'lambda'– Wavelength in nm.
+    %       'w0'    – Waist of the beam at z=0
+    %       'conj'  – Output phasor conjugate
     
     % Parse inputs
     global lambda w0
