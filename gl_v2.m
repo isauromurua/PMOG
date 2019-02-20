@@ -34,7 +34,9 @@ function f = laguerre_modulator(a,n,x,y,z)
     % Returns the Laguerre function as modulating wave
     global j
     r2 = x.^2 + y.^2;
-    f = laguerg(a, n, 2*r2./waist(z)).*exp(j);
+    f = (sqrt(2.*r2)./waist(z)).^n .* ...
+        laguerg(a, n, 2*r2./waist(z)).*exp(j.*a.*atan2(y,x)).*...
+        exp(j*(2*n+a).*guoys_p(z));
 end
 
 function glp = laguerg(a, n, x)
