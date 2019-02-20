@@ -10,10 +10,10 @@ function be = beam(x, y, z, n, m, varargin)
     % Parse inputs
     global lambda w0
     names = {'lambda','w0','conj','modul'}; % Optional argument names
-    defaults = {500e-9,1,0,'lag'}; % Optional arguments default values
+    defaults = {500e-9,1,0,'lagu'}; % Optional arguments default values
     [lambda,w0,conjugate,modul] = parsepvpairs(names,defaults,varargin{:});
     
-    if modul == 'lag'
+    if modul == 'lagu'
         % Call the function defined for each term
         modulator = laguerre_modulator(n,m,x,y,z);
         curved_wf = curved_wavefront(x, y, z);
@@ -42,9 +42,9 @@ end
 function f = laguerre_modulator(a,n,x,y,z)
     % Returns the Laguerre function as modulating wave
     r2 = x.^2 + y.^2;
-    f = (sqrt(2.*r2)./waist(z)).^n .* ...
-        laguerg(a, n, 2*r2./waist(z)).*exp(1j.*a.*atan2(y,x)).*...
-        exp(1j*(2*n+a).*guoys_p(z));
+%     f = (sqrt(2.*r2)./waist(z)).^n .* ...
+%         laguerg(a, n, 2*r2./waist(z)).*exp(1j.*a.*atan2(y,x)).*...
+%         exp(1j*(2*n+a).*guoys_p(z));
     f = (sqrt(2.*r2)./waist(z)).^n .* ...
         laguerg(a, n, 2*r2./waist(z)).*exp(1j.*a.*atan2(y,x));
 end
@@ -81,11 +81,10 @@ function hmn = hermite_modulator(a, n, x, y, z)
 end
 
 function h = hermite(n, x)
-    % Returns the nth Hermite polynomial of x
-
+    % Returns the nth Hermite polynomial evaluated at x
     [size1, size2] = size(x);
     m = floor(n / 2);
-    l = repmat([0:m], 1, 1, 1);
+    l = repmat(0:m, 1, 1, 1);
     l = permute(l, [1 3 2]);
     l = repmat(l, size1, size2, 1);
     x = repmat(x, 1, 1, m+1);
@@ -113,7 +112,7 @@ function curved_wf = curved_wavefront(x, y, z)
     % wave distortion
     global lambda
     R = rad_curvature(z);
-    curvature = 2 .* pi ./ (2 .* R .* lambda)
+    curvature = 2 .* pi ./ (2 .* R .* lambda);
     curved_wf = exp(1j .* curvature .* (x.^2 + y.^2));
 end
 
