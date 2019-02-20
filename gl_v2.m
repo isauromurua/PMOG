@@ -6,7 +6,7 @@ function gl = gl_v2(x, y, z, n, m, varargin)
     % Parse inputs
     global lambda w0 j
     names = {"lambda","w0","conj"}; % Optional argument names
-    defaults = {500e-9,1e2,0}; % Optional arguments default values
+    defaults = {500e-9,1,0}; % Optional arguments default values
     [lambda,w0,conj] = parsepvpairs(names,defaults,varargin{:});
     
     % Make conjugate if necessary
@@ -41,15 +41,21 @@ function glp = laguerg(a, n, x)
     % Returns the generalized Laguerre Polynomials valued at x,
     %   given constants a and n: 
     %   L_n^a(x) = sum_{i=0}^n((-1)^i nCr(n+a, n-i) x^i/i!)
-
-    index = (0:n)'; % This is the summation index
-    combinations = nCk(n + a, n - index); % The binomial coefficient for each term
-
-    glp = sum((-1) .^ index .* combinations .* x .^ index ./ factorial(index));
+    taman = size(x,2);
+    if ndims(x) == 2
+        X = repmat(x,1,1,n+1);
+        index = permute(repmat((0:n)',1,taman,taman),[3 2 1]); % Summation index
+        combinations = nCk(n + a, n - index); % Binomial coefficient for each term
+        glp = sum((-1) .^ index .* combinations .* X .^ index ./ factorial(index),3);
+%         surf(glp);
+    elseif ndims(x) == 3
+        X = repmat(x,1,1,1,n+1);
+        % Aqui van mas cosas
+    end
 end
 
 function nk = nCk(n, k)
-    % Vectorized version of NCHOOSEK().
+    % Vectorized version of nchoosek()
     nk = factorial(n) ./ (factorial(k) .* factorial(n - k));
 end
 
@@ -89,17 +95,4 @@ function guoys_phase = guoys_p(z)
     global lambda w0 j
     q0 = pi .* w0.^2 ./ lambda;
     guoys_phase = exp(-j .* atan(z ./ q0));
-end
-
-
-%% PRUEBA
-function beam = prueba
-
-x = linspace(-2,2,100);
-y = x;
-
-[X, Y] = meshgrid(x,y);
-Z = ones(size(X));
-
-beam = gl_v2(X,Y,Z,2,2);
 end
