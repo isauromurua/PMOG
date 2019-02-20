@@ -1,4 +1,4 @@
-function gl = gl_v2(x, y, z, n, m, varargin)
+function be = beam(x, y, z, n, m, varargin)
     %
     %
     %
@@ -23,7 +23,7 @@ function gl = gl_v2(x, y, z, n, m, varargin)
     gauss = gaussian(x,y,z);
     
     % Join all terms together for the output
-    gl = modulator .* gauss .* curved_wf .* guoys_phase;
+    be = modulator .* gauss .* curved_wf .* guoys_phase;
 end
 
 % PARAXIAL WAVE FACTORS:
