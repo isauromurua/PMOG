@@ -1,4 +1,4 @@
-function be = beam(x, y, z, n, m, varargin)
+function beem = beam(x, y, z, m, n, varargin)
     % Paraxial approximation modulated beams.
     %   Accepts the following name-value pairs:
     %       'modul' – 'lag' is Laguerre modulator
@@ -15,13 +15,13 @@ function be = beam(x, y, z, n, m, varargin)
     
     if modul == 'lagu'
         % Call the function defined for each term
-        modulator = laguerre_modulator(n,m,x,y,z);
+        modulator = laguerre_modulator(m,n,x,y,z);
         curved_wf = curved_wavefront(x, y, z);
         guoys_phase = guoys_p(z);
         gauss = gaussian(x,y,z);
     elseif modul == 'herm'
         % Call the function defined for each term
-        modulator = hermite_modulator(n,m,x,y,z);
+        modulator = hermite_modulator(m,n,x,y,z);
         curved_wf = curved_wavefront(x, y, z);
         guoys_phase = guoys_p(z);
         gauss = gaussian(x,y,z);
@@ -29,9 +29,9 @@ function be = beam(x, y, z, n, m, varargin)
     
     % Join all terms together for the output
     if conjugate
-        be = conj(modulator .* gauss .* curved_wf .* guoys_phase);
+        beem = conj(modulator .* gauss .* curved_wf .* guoys_phase);
     else
-        be = modulator .* gauss .* curved_wf .* guoys_phase;
+        beem = modulator .* gauss .* curved_wf .* guoys_phase;
     end
 end
 
@@ -39,31 +39,15 @@ end
 
 % =================  1.1 Laguerre modulator   =====================
 
-function f = laguerre_modulator(a,n,x,y,z)
+function f = laguerre_modulator(m,n,x,y,z)
     % Returns the Laguerre function as modulating wave
     r2 = x.^2 + y.^2;
-%     f = (sqrt(2.*r2)./waist(z)).^n .* ...
-%         laguerg(a, n, 2*r2./waist(z)).*exp(1j.*a.*atan2(y,x)).*...
-%         exp(1j*(2*n+a).*guoys_p(z));
-    f = (sqrt(2.*r2)./waist(z)).^n .* ...
-        laguerg(a, n, 2*r2./waist(z)).*exp(1j.*a.*atan2(y,x));
-end
-
-function glp = laguerg(a, n, x)
-    % Returns the generalized Laguerre Polynomials valued at x,
-    %   given constants a and n: 
-    %   L_n^a(x) = sum_{i=0}^n((-1)^i nCr(n+a, n-i) x^i/i!)
-    taman = size(x,2);
-    if ndims(x) == 2
-        X = repmat(x,1,1,n+1);
-        index = permute(repmat((0:n)',1,taman,taman),[3 2 1]); % Summation index
-        combinations = nCk(n + a, n - index); % Binomial coefficient for each term
-        glp = sum((-1) .^ index .* combinations .* X .^ index ./ factorial(index),3);
-%         surf(glp);
-    elseif ndims(x) == 3
-        X = repmat(x,1,1,1,n+1);
-        % Aqui van mas cosas
-    end
+%     f = (sqrt(2.*r2)./waist(z)).^m .* ...
+%         laguerg(n, m, 2*r2./waist(z).^2).*exp(1j.*n.*atan2(y,x)).*...
+%         exp(1j*(2*m+n).*guoys_p(z));
+    f = (sqrt(2.*r2)./waist(z)).^m .* ...
+        laguerg(n, m, 2*r2./waist(z)).*exp(1j.*n.*atan2(y,x)).*...
+        guoys_p(z);
 end
 
 function nk = nCk(n, k)
@@ -78,18 +62,6 @@ function hmn = hermite_modulator(a, n, x, y, z)
     
     arg = sqrt(2) .* x ./ waist(z); % por completar
     hmn = hermite(a, arg) .* hermite(n, arg);
-end
-
-function h = hermite(n, x)
-    % Returns the nth Hermite polynomial evaluated at x
-    [size1, size2] = size(x);
-    m = floor(n / 2);
-    l = repmat(0:m, 1, 1, 1);
-    l = permute(l, [1 3 2]);
-    l = repmat(l, size1, size2, 1);
-    x = repmat(x, 1, 1, m+1);
-    h = factorial(n) .* sum(((-1).^l .* (2 .* x).^(n - 2 .* l)) ./ ...
-        (factorial(l) .* factorial(n - 2 .* l)), 3);
 end
 
 % =================  2. Gaussian profile   =====================
