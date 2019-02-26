@@ -17,7 +17,7 @@ function beem = beam(x, y, z, m, n, varargin)
         % Call the function defined for each term
         modulator = laguerre_modulator(m,n,x,y,z);
         curved_wf = 1;%curved_wavefront(x, y, z);
-        guoys_phase = guoys_p(z);
+        guoys_phase = 1;%guoys_p(z);
         gauss = gaussian(x,y,z);
     elseif modul == 'herm'
         % Call the function defined for each term
