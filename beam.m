@@ -16,13 +16,13 @@ function beem = beam(x, y, z, m, n, varargin)
     if modul == 'lagu'
         % Call the function defined for each term
         modulator = laguerre_modulator(m,n,x,y,z);
-        curved_wf = curved_wavefront(x, y, z);
+        curved_wf = 1;%curved_wavefront(x, y, z);
         guoys_phase = guoys_p(z);
         gauss = gaussian(x,y,z);
     elseif modul == 'herm'
         % Call the function defined for each term
         modulator = hermite_modulator(m,n,x,y,z);
-        curved_wf = curved_wavefront(x, y, z);
+        curved_wf = 1;%curved_wavefront(x, y, z);
         guoys_phase = guoys_p(z);
         gauss = gaussian(x,y,z);
     end
