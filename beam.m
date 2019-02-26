@@ -1,4 +1,4 @@
-function beem = beam(x, y, z, m, n, varargin)
+function beem = beam(x, y, z, angular, radial, varargin)
     % Paraxial approximation modulated beams.
     %   Accepts the following name-value pairs:
     %       'modul' – 'lag' is Laguerre modulator
@@ -15,13 +15,13 @@ function beem = beam(x, y, z, m, n, varargin)
     
     if modul == 'lagu'
         % Call the function defined for each term
-        modulator = laguerre_modulator(m,n,x,y,z);
+        modulator = laguerre_modulator(angular,radial,x,y,z);
         curved_wf = 1;%curved_wavefront(x, y, z);
         guoys_phase = 1;%guoys_p(z);
         gauss = gaussian(x,y,z);
     elseif modul == 'herm'
         % Call the function defined for each term
-        modulator = hermite_modulator(m,n,x,y,z);
+        modulator = hermite_modulator(angular,radial,x,y,z);
         curved_wf = 1;%curved_wavefront(x, y, z);
         guoys_phase = guoys_p(z);
         gauss = gaussian(x,y,z);
@@ -39,14 +39,14 @@ end
 
 % =================  1.1 Laguerre modulator   =====================
 
-function f = laguerre_modulator(m,n,x,y,z)
+function f = laguerre_modulator(angular,radial,x,y,z)
     % Returns the Laguerre function as modulating wave
     r2 = x.^2 + y.^2;
 %     f = (sqrt(2.*r2)./waist(z)).^m .* ...
 %         laguerg(n, m, 2*r2./waist(z).^2).*exp(1j.*n.*atan2(y,x)).*...
 %         exp(1j*(2*m+n).*guoys_p(z));
-    f = (sqrt(2.*r2)./waist(z)).^m .* ...
-        laguerg(n, m, 2*r2./waist(z)).*exp(1j.*n.*atan2(y,x)).*...
+    f = (sqrt(2.*r2)./waist(z)).^abs(radial) .* ...
+        laguerg(angular, radial, 2*r2./waist(z).^2).*exp(1j.*radial.*atan2(y,x)).*...
         guoys_p(z);
 end
 
@@ -60,7 +60,8 @@ end
 function hmn = hermite_modulator(a, n, x, y, z)
     % Returns the Hermite-Gauss function as modulating wave
     
-    arg = sqrt(2) .* x ./ waist(z); % por completar
+    argx = sqrt(2) .* x ./ waist(z); % Rescaling
+    argy = sqrt(2) .* y ./ waist(z); % Rescaling
     hmn = hermite(a, arg) .* hermite(n, arg);
 end
 

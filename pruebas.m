@@ -11,7 +11,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y); % Definir dominio
 Z = eps.*ones(size(X)); % Definir plano
 
-beamer = beam(X,Y,Z,1,0); % Evaluar funcion
+beamer = beam(X,Y,Z,3,1); % Evaluar funcion
 modulo2 = beamer.*conj(beamer);
 % el_bueno = sqrt(modulo2);
 el_bueno = abs(real(beamer));
@@ -27,7 +27,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y);
 Z = 0.001.*ones(size(X));
 
-beamer = beam(X,Y,Z,0,2);
+beamer = beam(X,Y,Z,2,2);
 el_bueno = angle(beamer);
 % [gradx,grady] = gradient(el_bueno);
 % gradx = gradx./max(gradx); grady = grady./max(grady);
@@ -44,7 +44,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y);
 Z = 0.01.*ones(size(X));
 
-beamer = beam(X,Y,Z,2,2,'modul','herm');
+beamer = beam(X,Y,Z,1,1,'modul','herm');
 modulo2 = beamer.*conj(beamer);
 el_bueno = sqrt(modulo2);
 
