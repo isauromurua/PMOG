@@ -3,29 +3,7 @@ function h = hermite(n, x)
     %   h = HERMITE(n,x)
     %   h is the nth Hermite polynomial evaluated at x.
     %   Usage with vectors is allowed.
-    
-<<<<<<< HEAD
-    if isvector(x)
-        [size1, size2] = size(x);
-        m = floor(n / 2);
-        l = repmat(0:m, 1, 1, 1);
-        l = permute(l, [1 3 2]);
-        l = repmat(l, size1, size2, 1);
-        x = repmat(x, 1, 1, m+1);
-        h = factorial(n) .* sum(((-1).^l .* (2 .* x).^(n - 2 .* l)) ./ ...
-            (factorial(l) .* factorial(n - 2 .* l)), 3);
-    elseif not(isvector(x)) && ismatrix(x)
-        [size1, size2] = size(x);
-        m = floor(n / 2);
-        l = repmat(0:m, 1, 1, 1);
-        l = permute(l, [1 3 2]);
-        l = repmat(l, size1, size2, 1);
-        x = repmat(x, 1, 1, m+1);
-        h = factorial(n) .* sum(((-1).^l .* (2 .* x).^(n - 2 .* l)) ./ ...
-            (factorial(l) .* factorial(n - 2 .* l)), 3);
-        
-    end
-=======
+
 %     if isvector(x)
 %         [size1, size2] = size(x);
 %         m = floor(n / 2);
@@ -60,5 +38,4 @@ function h = hermite(n, x)
         error("El numero n no es compatible")
     end
         
->>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 end

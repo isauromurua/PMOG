@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 function beem = beam(x, y, z, m, n, varargin)
     % Paraxial approximation modulated beams.
     %   Accepts the following name-value pairs:
@@ -34,6 +33,8 @@ function beem = beam(x, y, z, m, n, varargin)
     else
         beem = modulator .* gauss .* curved_wf .* guoys_phase;
 =======
+=======
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 function beem = beam(x, y, z, radial, angular, varargin)
     % Paraxial approximation modulated beams.
     %
@@ -71,6 +72,9 @@ function beem = beam(x, y, z, radial, angular, varargin)
         beem = conj(C .* modulator .* gauss .* curved_wf .* guoys_phase);
     else
         beem = C .* modulator .* gauss .* curved_wf .* guoys_phase;
+<<<<<<< HEAD
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
+=======
 >>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
     end
 end
@@ -79,6 +83,7 @@ end
 
 % =================  1.1 Laguerre modulator   =====================
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 function f = laguerre_modulator(m,n,x,y,z)
     % Returns the Laguerre function as modulating wave
@@ -90,6 +95,8 @@ function f = laguerre_modulator(m,n,x,y,z)
         laguerg(n, m, 2*r2./waist(z)).*exp(1j.*n.*atan2(y,x)).*...
         guoys_p(z);
 =======
+=======
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 function f = laguerre_modulator(radial,angular,x,y,z)
     % Returns the Laguerre function as modulating wave
     r2 = x.^2 + y.^2;
@@ -97,6 +104,9 @@ function f = laguerre_modulator(radial,angular,x,y,z)
         laguerg(abs(angular), radial, 2*r2./waist(z).^2).* ...
         exp(1j.*angular.*atan2(y,x)).*...
         exp(1i.*guoys_p(z).*(2*radial+abs(angular)+1));
+<<<<<<< HEAD
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
+=======
 >>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 end
 
@@ -111,8 +121,14 @@ function hmn = hermite_modulator(a, n, x, y, z)
     % Returns the Hermite-Gauss function as modulating wave
     
 <<<<<<< HEAD
+<<<<<<< HEAD
     arg = sqrt(2) .* x ./ waist(z); % por completar
     hmn = hermite(a, arg) .* hermite(n, arg);
+=======
+    argx = sqrt(2) .* x ./ waist(z); % Rescaling
+    argy = sqrt(2) .* y ./ waist(z); % Rescaling
+    hmn = hermite(a, argx) .* hermite(n, argy);
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 =======
     argx = sqrt(2) .* x ./ waist(z); % Rescaling
     argy = sqrt(2) .* y ./ waist(z); % Rescaling
@@ -157,7 +173,11 @@ function guoys_phase = guoys_p(z)
     q0 = pi .* w0.^2 ./ lambda;
     guoys_phase = exp(-1j .* atan(z ./ q0));
 <<<<<<< HEAD
+<<<<<<< HEAD
 end
+=======
+end
+>>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
 =======
 end
 >>>>>>> 9217778e8794e660d0c6908617b958e2298526a2
