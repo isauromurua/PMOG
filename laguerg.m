@@ -2,7 +2,7 @@ function glp = laguerg(a, n, x)
     % Returns the generalized Laguerre Polynomials valued at x,
     %   given constants a and n: 
     %   LAGUERG(a,n,x) = sum_{i=0}^n((-1)^i nCr(n+a, n-i) x^i/i!)
-    [taman1,taman2] = size(x);
+%     [taman1,taman2] = size(x);
     
 %     if isvector(x)
 %         x = reshape(x,[1,taman1*taman2]); % Forzarlo a ser renglon
