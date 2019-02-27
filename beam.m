@@ -3,7 +3,7 @@ function beem = beam(x, y, z, radial, angular, varargin)
     %
     %          beem = BEAM(x,y,z, radial, angular) returns an array
     %          evaluated point-wise at x,y,z with modes angular and radial.
-    % 
+    %
     %           Accepts the following name-value pairs:
     %               'modul' – 'lag' is Laguerre modulator
     %                       – 'herm' is Hermite modulator
