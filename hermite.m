@@ -31,9 +31,9 @@ function h = hermite(n, x)
     elseif n==2
         h = 4.*x.^2 - 2; % H_2(x)
     elseif n==1
-        h = 2.*x;
+        h = 2.*x; % H_1(x)
     elseif n == 0
-        h = ones(size(x));
+        h = ones(size(x)); % H_0(x)
     else
         error("El numero n no es compatible")
     end
