@@ -1,6 +1,6 @@
 % =============== SCRIPT PARA PRUEBAS Y VISUALIZACIONES ==================
 if 1 % Cuadrado o customizado
-    xinf = -0.2;
+    xinf = -0.05;
     xsup = -xinf; yinf = xinf; ysup = -xinf;
 else
     xinf = -1;
@@ -31,7 +31,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y);
 Z = 0.0;
 
-beamer = beam(X,Y,Z,0,0);
+beamer = beam(X,Y,Z,1,0);
 el_bueno = angle(beamer);
 % [gradx,grady] = gradient(el_bueno);
 % gradx = gradx./max(gradx); grady = grady./max(grady);
@@ -49,8 +49,7 @@ y = linspace(yinf,ysup,400);
 Z = eps.*ones(size(X));
 
 beamer = beam(X,Y,Z,2,2,'modul','herm');
-modulo2 = beamer.*conj(beamer);
-el_bueno = sqrt(modulo2);
+el_bueno = abs(beamer);
 
 % Realizar grafica
 surfc(X,Y,el_bueno,'EdgeColor','None');

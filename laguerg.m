@@ -30,11 +30,6 @@ function glp = laguerg(a, n, x)
     elseif n == 0
         glp = ones(size(x));
     else
-        error("Numero no compaible");
+        error("Numero no compatible");
     end
-end
-
-function nk = nCk(n, k)
-    % Vectorized version of nchoosek()
-    nk = factorial(n) ./ (factorial(k) .* factorial(n - k));
 end

@@ -18,7 +18,14 @@ function beem = beam(x, y, z, radial, angular, varargin)
     [lambda,w0,conjugate,modul,C] = parsepvpairs(names,defaults,varargin{:});
     
     q0 = pi .* w0.^2 ./ lambda; % Rayleigh range
-%     z = z.*q0; % Unidades de distancias de Rayleigh
+    z = z.*q0; % Unidades de distancias de Rayleigh
+    
+    % Normalization constant
+    if C
+        C = sqrt(2*factorial(radial)/(pi*factorial(radial+abs(angular))));
+    else
+        C = 1;
+    end
     
     if modul == 'lagu'
         % Laguerre
@@ -26,18 +33,19 @@ function beem = beam(x, y, z, radial, angular, varargin)
         modulator = (sqrt(2.*r2)./waist(z)).^abs(angular) .* ...
             laguerg(abs(angular), radial, 2*r2./waist(z).^2).* ...
             exp(1j.*angular.*atan2(y,x)).*...
-            exp(1i.*gouys_p(z).*(2*radial+abs(angular)+1));
+            exp(1j.*gouys_p(z).*(2*radial+abs(angular)));
     elseif modul == 'herm'
         % Hermite
+        r2 = x.^2 + y.^2;
         argx = sqrt(2) .* x ./ waist(z); % Rescaling
         argy = sqrt(2) .* y ./ waist(z); % Rescaling
-        modulator = hermite(a, argx) .* hermite(n, argy);
+        modulator = hermite(radial, argx) .* hermite(radial, argy);
     end
     
     % ============== Define each term ==============
-    curved_wf = exp(-1j *(2*pi/lambda) .* r2 .* z / (2*(z.^2+pi*w0^2/lambda)));
-    gouys_phase = exp(1i*gouys_p(z));
-    gauss = w0*exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z);
+    curved_wf = exp(-1j *(2*pi/lambda) .* r2 .* z / (2*(z.^2+q0)));
+    gauss = w0*exp(-r2 ./ waist(z.^2)) ./ waist(z);
+    gouys_phase = exp(1j*gouys_p(z));
     
     % ============== Join all terms together for the output ==============
     if conjugate
