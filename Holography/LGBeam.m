@@ -6,5 +6,5 @@ function [E] = LGBeam(p, l, w, xx, yy)
 th=atan2(yy, xx);
 rr2=(xx.^2+yy.^2)/w^2;
 c(p+1)=1;
-E=(2*rr2).^(abs(l)/2).*exp(-rr2+1i*l*th).*LaguerreL(c, abs(l), 2*rr2);
+E=(2*rr2).^(abs(l)/2).*exp(-rr2+1i*l*th).*laguerg(c, abs(l), 2*rr2);
 end
