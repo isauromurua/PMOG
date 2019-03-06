@@ -1,17 +1,22 @@
 % =============== SCRIPT PARA PRUEBAS Y VISUALIZACIONES ==================
-xinf = -10;
-xsup = 10;
-yinf = -10;
-ysup = 10;
-
+if 1 
+    xsup = 3; 
+    xinf = -xsup;
+    ysup = -xsup; yinf = --xsup;
+else
+    xinf = -2;
+    xsup = 2;
+    yinf = -2;
+    ysup = 2;
+end
 %% Magnitud del campo electrico LAGUERRE
 x = linspace(xinf,xsup,400);
 y = linspace(yinf,ysup,400);
 
 [X, Y] = meshgrid(x,y); % Definir dominio
-Z = 0.01*ones(size(X)); % Definir plano
+Z = 1e6*ones(size(X)); % Definir plano
 
-beamer = beam(X,Y,Z,0,0); % Evaluar funcion
+beamer = beam(X,Y,Z,1,0,'w0',1); % Evaluar funcion
 % el_bueno = abs(beamer);
 el_bueno = abs(real(beamer));
 
