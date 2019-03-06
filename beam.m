@@ -18,9 +18,15 @@ function beem = beam(x, y, z, radial, angular, varargin)
     [lambda,w0,conjugate,modul,C] = parsepvpairs(names,defaults,varargin{:});
     
     % =============================== Useful constants
-    r2 = x.^2 + y.^2;
+    r2 = x.^2 + y.^2; % r^2_\perp
     q0 = pi*w0^2/lambda;
+    z = z*q0; % UNIDADES DE Z EN DISTANCIAS DE RAYLEIGH
+    % Normalize if user asks
+    if C == 1
+        C = sqrt(2*factorial(radial)/(pi*factorial(radial+abs(angular))));
+    end
     
+    % =============================== Define terms
     if modul == 'lagu'
         % Call the function for the polynomial term
         modulator = (sqrt(2.*r2)./waist(z)).^abs(angular) .* ...
@@ -28,26 +34,29 @@ function beem = beam(x, y, z, radial, angular, varargin)
             exp(1j.*angular.*atan2(y,x)).*...
             exp(1i.*guoys_p(z).*(2*radial+abs(angular)+1));
     elseif modul == 'herm'
+        if radial == angular
         % Call the function for the polynomial term
         argx = sqrt(2) .* x ./ waist(z); % Rescaling
         argy = sqrt(2) .* y ./ waist(z); % Rescaling
-        modulator = hermite(a, argx) .* hermite(n, argy);
+        modulator = hermite(radial, argx) .* hermite(radial, argy);
+        else
+            error("Por favor que el argumanto radial sea igual a angular")
+        end
     end
     
-    % =============================== Define terms
     wave_front = exp(-1j*(2*pi/lambda).*r2./(2.*(z.^2+q0^2)));
-    guoys_phase = guoys_p(z);
+    guoys_phase = 1;
     gauss = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z); 
     
     % =============================== Join all terms for the output
     if conjugate
-        beem = conj(C .* modulator .* gauss .* curved_wf .* guoys_phase);
+        beem = conj(C .* modulator .* gauss .* wave_front .* guoys_phase);
     else
-        beem = C .* modulator .* gauss .* curved_wf .* guoys_phase;
+        beem = C .* modulator .* gauss .* wave_front .* guoys_phase;
     end
 end
 
-% PARAXIAL WAVE FACTORS:
+% ========================= USEFUL AUXILIARY FUNCTIONS =================
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
@@ -55,29 +64,12 @@ function w = waist(z)
     w = (1 / pi) * sqrt(lambda.^2 * z.^2 + pi^2 .* w0^2);
 end
 
-% =================  3. Curved wavefront   =====================
-
-function curved_wf = curved_wavefront(x, y, z)
-    % Returns the curved wafvefront resulting from spherical
-    % wave distortion
-    global lambda
-    R = rad_curvature(z);
-    curvature = 2 .* pi ./ (2 .* R .* lambda);
-    curved_wf = exp(1j .* curvature .* (x.^2 + y.^2));
-end
-
-function R = rad_curvature(z)
-    % Returns the radius of curvature of the wavefront
-    global lambda w0
-    q0 = pi .* w0.^2 ./ lambda;
-    R = z .* (1 + (q0 ./ z).^2);
-end
-% =================  4. Guoy's phase   =====================
+% =================  Guoy's phase   =====================
 
 function guoys_phase = guoys_p(z)
     global lambda w0
     q0 = pi .* w0.^2 ./ lambda;
-    guoys_phase = exp(-1j .* atan(z ./ q0));
+    guoys_phase = atan2(z,q0);
 end
 
 

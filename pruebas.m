@@ -5,13 +5,13 @@ yinf = -10;
 ysup = 10;
 
 %% Magnitud del campo electrico LAGUERRE
-x = linspace(xinf,xsup,4000);
-y = linspace(yinf,ysup,4000);
+x = linspace(xinf,xsup,400);
+y = linspace(yinf,ysup,400);
 
 [X, Y] = meshgrid(x,y); % Definir dominio
-Z = eps.*ones(size(X)); % Definir plano
+Z = 0.01*ones(size(X)); % Definir plano
 
-beamer = beam(X,Y,Z,2,2); % Evaluar funcion
+beamer = beam(X,Y,Z,0,0); % Evaluar funcion
 % el_bueno = abs(beamer);
 el_bueno = abs(real(beamer));
 
@@ -26,7 +26,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y);
 Z = 0.001.*ones(size(X));
 
-beamer = beam(X,Y,Z,8,100);
+beamer = beam(X,Y,Z,0,1);
 el_bueno = angle(beamer);
 % [gradx,grady] = gradient(el_bueno);
 % gradx = gradx./max(gradx); grady = grady./max(grady);
@@ -61,7 +61,7 @@ y = linspace(yinf,ysup,100);
 [X, Y] = meshgrid(x,y);
 Z = eps.*ones(size(X));
 
-beamer = beam(X,Y,Z,1,1,'modul','herm');
+beamer = beam(X,Y,Z,2,2,'modul','herm');
 el_bueno = angle(beamer);
 % [gradx,grady] = gradient(el_bueno);
 % gradx = gradx./max(gradx); grady = grady./max(grady);
@@ -69,4 +69,4 @@ el_bueno = angle(beamer);
 % Realizar grafica
 surfc(X,Y,el_bueno,'EdgeColor','None'); hold on;
 % quiver(X,Y,gradx,grady);
-view(2); colormap(cool); rotate3d on; colorbar;
+view(2); colormap(gray); rotate3d on; colorbar;
