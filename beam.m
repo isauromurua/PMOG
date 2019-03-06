@@ -11,26 +11,35 @@ function beem = beam(x, y, z, radial, angular, varargin)
     %               'w0'    – Waist of the beam at z=0
     %               'conj'  – Flag to return phasor conjugate
     
-    % Parse inputs
+    % =============================== Parse inputs
     global lambda w0
     names = {'lambda','w0','conj','modul','norm'}; % Optional argument names
     defaults = {500e-9,1,0,'lagu',1}; % Optional arguments default values
     [lambda,w0,conjugate,modul,C] = parsepvpairs(names,defaults,varargin{:});
     
+    % =============================== Useful constants
+    r2 = x.^2 + y.^2;
+    q0 = pi*w0^2/lambda;
+    
     if modul == 'lagu'
         % Call the function for the polynomial term
-        modulator = laguerre_modulator(radial,angular,x,y,z);
+        modulator = (sqrt(2.*r2)./waist(z)).^abs(angular) .* ...
+            laguerg(abs(angular), radial, 2*r2./waist(z).^2).* ...
+            exp(1j.*angular.*atan2(y,x)).*...
+            exp(1i.*guoys_p(z).*(2*radial+abs(angular)+1));
     elseif modul == 'herm'
         % Call the function for the polynomial term
-        modulator = hermite_modulator(radial,angular,x,y,z);
+        argx = sqrt(2) .* x ./ waist(z); % Rescaling
+        argy = sqrt(2) .* y ./ waist(z); % Rescaling
+        modulator = hermite(a, argx) .* hermite(n, argy);
     end
     
-    % Call each function
-    curved_wf = 1;%curved_wavefront(x, y, z);
+    % =============================== Define terms
+    wave_front = exp(-1j*(2*pi/lambda).*r2./(2.*(z.^2+q0^2)));
     guoys_phase = guoys_p(z);
-    gauss = gaussian(x,y,z); 
+    gauss = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z); 
     
-    % Join all terms together for the output
+    % =============================== Join all terms for the output
     if conjugate
         beem = conj(C .* modulator .* gauss .* curved_wf .* guoys_phase);
     else
@@ -39,34 +48,6 @@ function beem = beam(x, y, z, radial, angular, varargin)
 end
 
 % PARAXIAL WAVE FACTORS:
-
-% =================  1.1 Laguerre modulator   =====================
-
-function f = laguerre_modulator(radial,angular,x,y,z)
-    % Returns the Laguerre function as modulating wave
-    r2 = x.^2 + y.^2;
-    f = (sqrt(2.*r2)./waist(z)).^abs(angular) .* ...
-        laguerg(abs(angular), radial, 2*r2./waist(z).^2).* ...
-        exp(1j.*angular.*atan2(y,x)).*...
-        exp(1i.*guoys_p(z).*(2*radial+abs(angular)+1));
-end
-
-% =================  1.2 Hermite modulator   =====================
-
-function hmn = hermite_modulator(a, n, x, y, z)
-    % Returns the Hermite-Gauss function as modulating wave
-
-    argx = sqrt(2) .* x ./ waist(z); % Rescaling
-    argy = sqrt(2) .* y ./ waist(z); % Rescaling
-    hmn = hermite(a, argx) .* hermite(n, argy);
-end
-
-% =================  2. Gaussian profile   =====================
-
-function prof = gaussian(x,y,z)
-    global w0
-    prof = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z);
-end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.

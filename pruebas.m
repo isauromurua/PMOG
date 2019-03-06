@@ -11,7 +11,7 @@ y = linspace(yinf,ysup,4000);
 [X, Y] = meshgrid(x,y); % Definir dominio
 Z = eps.*ones(size(X)); % Definir plano
 
-beamer = beam(X,Y,Z,2,200); % Evaluar funcion
+beamer = beam(X,Y,Z,2,2); % Evaluar funcion
 % el_bueno = abs(beamer);
 el_bueno = abs(real(beamer));
 
