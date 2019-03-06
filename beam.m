@@ -20,7 +20,7 @@ function beem = beam(x, y, z, radial, angular, varargin)
     % =============================== Useful constants
     r2 = x.^2 + y.^2; % r^2_\perp
     q0 = pi*w0^2/lambda
-%     z = z*q0; % UNIDADES DE Z EN DISTANCIAS DE RAYLEIGH
+    z = z*q0; % UNIDADES DE Z EN DISTANCIAS DE RAYLEIGH
     % Normalize if user asks
     if C == 1
         C = sqrt(2*factorial(radial)/(pi*factorial(radial+abs(angular))));
