@@ -1,6 +1,6 @@
 % =============== SCRIPT PARA PRUEBAS Y VISUALIZACIONES ==================
 if 1 
-    xsup = 1; 
+    xsup = 1.5; 
     xinf = -xsup;
     ysup = -xsup; yinf = --xsup;
 else
@@ -16,7 +16,7 @@ y = linspace(yinf,ysup,400);
 [X, Y] = meshgrid(x,y); % Definir dominio
 Z = 1*ones(size(X)); % Definir plano
 
-beamer = beam(X,Y,Z,0,0,'w0',1e-1); % Evaluar funcion
+beamer = beam(X,Y,Z,0,0,'w0',0.1e-0); % Evaluar funcion
 % el_bueno = abs(beamer);
 el_bueno = abs(real(beamer));
 
