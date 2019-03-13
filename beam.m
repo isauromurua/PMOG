@@ -31,8 +31,7 @@ function beem = beam(x, y, z, radial, angular, varargin)
         % Call the function for the polynomial term
         modulator = (sqrt(2.*r2)./waist(z)).^abs(angular) .* ...
             laguerg(abs(angular), radial, 2*r2./waist(z).^2).* ...
-            exp(1j.*angular.*atan2(y,x)).*...
-            exp(1i.*guoys_p(z).*(2*radial+abs(angular)+1));
+            exp(1j.*angular.*atan2(y,x));
     elseif modul == 'herm'
         if radial == angular
         % Call the function for the polynomial term
@@ -45,7 +44,7 @@ function beem = beam(x, y, z, radial, angular, varargin)
     end
     
     wave_front = exp(-1j*(2*pi/lambda).*r2./(2.*(z.^2+q0^2)));
-    guoys_phase = 1;
+    guoys_phase = exp(1j.*guoys_p(z).*(2*radial+abs(angular)+1));
     gauss = w0 .* exp(-(x.^2 + y.^2) ./ waist(z.^2)) ./ waist(z); 
     
     % =============================== Join all terms for the output
@@ -60,8 +59,9 @@ end
 
 function w = waist(z)
     % Returns the waist of the beam at distance z of propagation.
-    global lambda w0
-    w = (1 / pi) * sqrt(lambda.^2 * z.^2 + pi^2 .* w0^2);
+    global w0 lambda
+    q0 = pi*w0^2/lambda;
+    w = w0 * sqrt(1 + z./q0);
 end
 
 % =================  Guoy's phase   =====================
