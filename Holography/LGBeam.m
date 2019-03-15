@@ -11,27 +11,29 @@ w0 = w;
 
 % Auxiliary values
 th=atan2(yy, xx);
-if isempty(varargin)
+if isempty(varargin) % Caso donde no hay entradas opcionales
     lambda = 500e-9;
     z = 0;
-elseif length(varargin) == 1
+elseif length(varargin) == 1 % Solo z fue especificado
     z = varargin{1};
     lambda = 500e-9;
 else
-    z = varargin{1};
-    lambda = varargin{2};
+    z = varargin{1}; % z es el primer arg
+    lambda = varargin{2}; % Lambda es el segundo arg
 end
 k = 2*pi/lambda; % Wave number
 q0 = pi*w^2/lambda;
-z = z*q0; % Rayleigh length
+z = z*q0; % Rayleigh length units
 rr2=(xx.^2+yy.^2)/waist(z)^2;
 
+
+% ================ EVALUACION ==========================
 % For z = 0
-E = (2*rr2).^(abs(l)/2).*exp(-rr2+1i*l*th).*laguerg(p, abs(l), 2*rr2);
+E = (2*rr2).^(abs(l)/2).*exp(-rr2+1j*l*th).*laguerg(abs(l),p, 2*rr2); % Original
 
 % Include terms for z > 0
 E = E .* exp(1j*(2*p + abs(l) + 1).*guoys_p(z)); % Guoys phase term
-E = E .* exp(1j.*k.*rr2.*waist(z)^2.*z./(2.*z.^2 + 2*q0^2)) ./ (waist(z)^2); % Wavefront term
+E = E .* exp(-1j.*k.*rr2.*waist(z)^2.*z./(2.*z.^2 + 2*q0^2)) ./ (waist(z)); % Wavefront term
 end
 
 % ========================= USEFUL AUXILIARY FUNCTIONS =================

@@ -14,12 +14,12 @@ x = linspace(xinf,xsup,400);
 y = linspace(yinf,ysup,400);
 
 [X, Y] = meshgrid(x,y); % Definir dominio
-z = 3; % Definir plano
+z = 0; % Definir plano
 
-beamer = LGBeam(1,1,1e-1,X,Y,z);
+beamer = LGBeam(0,1,1e-1,X,Y,z);
 % beamer = beam(X,Y,Z,2,2,'w0',0.1e-0); % Evaluar funcion
 % el_bueno = abs(beamer);
-el_bueno = abs((beamer));
+el_bueno = abs(beamer);
 
 % Realizar grafica
 surfc(X,Y,el_bueno,'EdgeColor','None');
@@ -28,11 +28,11 @@ view(2); colormap(gray); rotate3d on; colorbar;
 %% ANIMACION AMPLITUD
 
 frames = 100;
-max = 100;
+max = 3;
 beamer = zeros(400,400,frames);
 el_bueno = zeros(400,400,frames);
 for l = 1:frames
-    beamer(:,:,l) = LGBeam(2,2,1e-1,X,Y,max*(l-1)/(frames));
+    beamer(:,:,l) = LGBeam(1,0,1e-1,X,Y,max*(l-1)/(frames));
     el_bueno(:,:,l) = abs(real(beamer(:,:,l)));
 end
 
@@ -40,7 +40,7 @@ for l = 1:frames
     % Realizar grafica
     surfc(X,Y,el_bueno(:,:,l),'EdgeColor','None');
     view(2); colormap(gray); rotate3d on; colorbar;
-    pause(0.01);
+    pause(0.001);
 end
 %% Fase del campo electrico LAGUERRE
 x = linspace(xinf,xsup,400);
