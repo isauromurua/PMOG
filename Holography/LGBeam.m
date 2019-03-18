@@ -12,8 +12,8 @@ w0 = w;
 % Auxiliary values
 th=atan2(yy, xx);
 if isempty(varargin) % Caso donde no hay entradas opcionales
-    lambda = 500e-9;
-    z = 0;
+    lambda = 500e-9; % Defalut lambda
+    z = 0; % Defalut z
 elseif length(varargin) == 1 % Solo z fue especificado
     z = varargin{1};
     lambda = 500e-9;
