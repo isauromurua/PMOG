@@ -45,7 +45,7 @@ z = 1e-10
 a, b = 4, 5
 #z = 2000
 
-def herm_beam(x, y, z, a, b)
+def herm_beam(x, y, z, a, b):
     # Hermite modulator
     X, Y = np.meshgrid(x, y)
 
@@ -54,7 +54,7 @@ def herm_beam(x, y, z, a, b)
     G = GuoysP(z)
     cwf = curved_wf(x, y, z)
 
-    return img = M * P * G * cwf
+    return M * P * G * cwf
 
 img = herm_beam(x, y, z, a, b)
 
@@ -70,7 +70,15 @@ plt.imshow(amplitude, cmap='gray')
 plt.tight_layout()
 plt.show()
 #%%
-
+import matplotlib.animation as animation
+fig2 = plt.figure()
 ims = []
-for add in np.arange(15):
-    ims.append((plt.pcolor(, y, base + add, norm=plt.Normalize(0, 30)),))
+for z_i in np.arange(100):
+    ims.append(herm_beam(x, y, z + z_i * 100, a, b))
+
+im_ani = animation.ArtistAnimation(fig2, ims, interval=50, repeat_delay=3000,
+                                   blit=True)
+plt.show()
+
+
+#%%
