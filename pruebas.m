@@ -30,12 +30,20 @@ view(2); colormap(gray); rotate3d on; colorbar;
 
 %% ANIMACION AMPLITUD LAGUERRE
 
-frames = 100;
+frames = 1;
 max = 3;
 beamer = zeros(400,400,frames);
 el_bueno = zeros(400,400,frames);
+
+% Propagacion analitica
+% for l = 1:frames
+%     beamer(:,:,l) = LGBeam(0,5,1e-1,X,Y,max*(l-1)/(frames));
+%     el_bueno(:,:,l) = abs((beamer(:,:,l)));
+% end
+
+% Propagacion numerica
 for l = 1:frames
-    beamer(:,:,l) = LGBeam(0,5,1e-1,X,Y,max*(l-1)/(frames));
+    beamer(:,:,l) = propagate(LGBeam(0,5,1e-1,X,Y),+max*(l-1)/(frames));
     el_bueno(:,:,l) = abs((beamer(:,:,l)));
 end
 
@@ -45,6 +53,7 @@ for l = 1:frames
     view(2); colormap(gray); rotate3d on; colorbar;
     pause(0.001);
 end
+
 %% Fase del campo electrico LAGUERRE
 
 z = 1;
@@ -65,8 +74,15 @@ frames = 100;
 max = 2;
 beamer = zeros(400,400,frames);
 el_bueno = zeros(400,400,frames);
+% Propagacion analitica
+% for l = 1:frames
+%     beamer(:,:,l) = LGBeam(0,5,1e-1,X,Y,max*(l-1)/(frames));
+%     el_bueno(:,:,l) = angle((beamer(:,:,l)));
+% end
+
+% Propagacion numerica
 for l = 1:frames
-    beamer(:,:,l) = LGBeam(0,5,1e-1,X,Y,max*(l-1)/(frames));
+    beamer(:,:,l) = propagator(LGBeam(0,5,1e-1,X,Y),max*(l-1)/(frames));
     el_bueno(:,:,l) = angle((beamer(:,:,l)));
 end
 
@@ -105,3 +121,5 @@ el_bueno = angle(beamer);
 surfc(X,Y,el_bueno,'EdgeColor','None'); hold on;
 % quiver(X,Y,gradx,grady);
 view(2); colormap(gray); rotate3d on; colorbar;
+
+
